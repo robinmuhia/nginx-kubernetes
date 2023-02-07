@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app-nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: node-app-nginx
+  ports:
+  - port: 3333
+    targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: node-app-nginx
+  template:
+    metadata:
+      labels:
+        app: node-app-nginx
+    spec:
+      containers:
+      - name: node-app-nginx
+        image: robinmuhia/node-app-nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 3000
+
